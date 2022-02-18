@@ -1,11 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import { Card, Button, Input } from "antd";
+import { Card, Button, Input, notification } from "antd";
 import { useEffect, useState } from "react";
 import { useWeb3Contract, useMoralis } from "react-moralis";
 import BigNumber from "bignumber.js";
 import Web3 from "web3";
 import Text from "antd/lib/typography/Text";
+import wrarLogo from "../../../assets/logo.png";
+import ftmLogo from "../../../assets/ftm-logo.png";
 
 const wRarAbi = [
   { inputs: [], stateMutability: "nonpayable", type: "constructor" },
@@ -896,11 +898,21 @@ export default function Stake1Window() {
   const [pendingRewards, setPendingRewards] = useState(0);
   const [stakedAmount, setStakedAmount] = useState(0);
   const [isApproved, setIsApproved] = useState(false);
+  const [isFantomConnected, setIsFantomConnected] = useState(false);
   const [amount, setAmount] = useState();
   const { account, isAuthenticated, Moralis } = useMoralis();
 
   useEffect(() => {
     if (account) {
+      isConnectedToFantom();
+    }
+  });
+
+  useEffect(() => {
+    const isFantom = isConnectedToFantom();
+
+    if (account && isFantomConnected) {
+      console.log(Moralis.getChainId());
       console.log(isCheckingRewards);
       if (!isCheckingRewards) {
         console.log(account);
@@ -909,20 +921,22 @@ export default function Stake1Window() {
         }, 3000);
         setIsCheckingRewards(true);
       }
-    }
-  }, [account]);
-
-  useEffect(() => {
-    if (account) {
       getStakedAmount();
     }
-  }, [account]);
+  }, [account, isFantomConnected]);
 
   // useEffect(() => {
   //   if (account) {
   //     getPendingRewards();
   //   }
   // }, [account]);
+
+  async function isConnectedToFantom() {
+    const chain = await Moralis.getChainId();
+    if (chain === "0xfa") {
+      setIsFantomConnected(true);
+    }
+  }
 
   async function approve(amount) {
     setIsApprovePending(amount);
@@ -939,6 +953,7 @@ export default function Stake1Window() {
     console.log(confirmation.status);
     if (confirmation.status === 1) {
       setIsApproved(true);
+      openSuccessNotification("Approve Successful!");
       setIsApprovePending(false);
     }
   }
@@ -956,9 +971,9 @@ export default function Stake1Window() {
     const confirmation = await transaction.wait();
     console.log(confirmation.status);
     if (confirmation.status === 1) {
-      console.log("Staking sucessfull");
       await getStakedAmount();
       setAmount();
+      openSuccessNotification("Stake Successful!");
       setIsStakePending(false);
     }
   }
@@ -977,9 +992,9 @@ export default function Stake1Window() {
     const confirmation = await transaction.wait();
     console.log(confirmation.status);
     if (confirmation.status === 1) {
-      console.log("Unstaking sucessfull");
       await getStakedAmount();
       setAmount();
+      openSuccessNotification("Unstake Successful!");
       setIsUnstakePending(false);
     }
   }
@@ -1007,7 +1022,7 @@ export default function Stake1Window() {
     console.log(transaction);
     const confirmation = await transaction.wait();
     if (confirmation.status === 1) {
-      console.log("Staking sucessfull");
+      openSuccessNotification("Harvest Successful!");
       setIsHarvestPending(false);
     }
   }
@@ -1024,11 +1039,24 @@ export default function Stake1Window() {
     setStakedAmount(amount);
   }
 
+  const openSuccessNotification = (message) => {
+    const args = {
+      message: message,
+      description: "",
+      duration: 10,
+    };
+    notification.open(args);
+  };
+
   return (
     <Card
       style={styles.card}
       title={
         <div style={styles.header}>
+          <div className="sc-logo-wrapper">
+            <img src={wrarLogo} alt="wRar Logo" width="50" height="50" />
+            <img src={ftmLogo} alt="FTM Logo" width="50" height="50" />
+          </div>
           <div className="title-wrapper">
             <span className="title">Stake wRAR-FTM LP</span>
             <span className="multiplier">x3</span>
@@ -1058,10 +1086,12 @@ export default function Stake1Window() {
           </div>
         </div>
         <div className="input-wrapper">
-          <span className="input-title">Type amount</span>
           <Input
             size="large"
             value={amount}
+            disabled={!isAuthenticated}
+            type="number"
+            placeholder="0.0"
             onChange={(e) => {
               setAmount(`${e.target.value}`);
             }}
@@ -1079,7 +1109,7 @@ export default function Stake1Window() {
               marginRight: "0.5%",
             }}
             onClick={() => unstake(amount)}
-            disabled={false}
+            disabled={!amount || !isFantomConnected}
           >
             Unstake
           </Button>
@@ -1095,7 +1125,7 @@ export default function Stake1Window() {
                 marginRight: "0.5%",
               }}
               onClick={() => approve(amount)}
-              disabled={false}
+              disabled={!amount || !isFantomConnected}
             >
               Approve
             </Button>
@@ -1112,7 +1142,7 @@ export default function Stake1Window() {
                 marginRight: "0.5%",
               }}
               onClick={() => stake(amount)}
-              disabled={false}
+              disabled={!amount || !isFantomConnected}
             >
               Stake
             </Button>
@@ -1135,6 +1165,11 @@ export default function Stake1Window() {
           >
             Harvest RBE
           </Button>
+        )}
+        {!isFantomConnected && (
+          <span className="warning">
+            Wrong network. You should change to Fantom
+          </span>
         )}
       </div>
     </Card>

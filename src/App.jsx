@@ -1,8 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useMoralis } from "react-moralis";
 import { BrowserRouter as Router } from "react-router-dom";
 import Account from "components/Account/Account";
-import { Layout } from "antd";
+import { Layout, notification } from "antd";
 import "antd/dist/antd.css";
 import NativeBalance from "components/NativeBalance";
 import "./style.css";
@@ -32,7 +32,7 @@ const styles = {
     alignItems: "center",
     fontFamily: "Roboto, sans-serif",
     borderBottom: "2px solid rgba(0, 0, 0, 0.06)",
-    padding: "0 10px",
+    padding: "0 20px",
     boxShadow: "0 1px 10px rgb(151 164 175 / 10%)",
   },
   headerRight: {
@@ -44,8 +44,55 @@ const styles = {
   },
 };
 const App = () => {
-  const { isWeb3Enabled, enableWeb3, isAuthenticated, isWeb3EnableLoading } =
-    useMoralis();
+  const {
+    account,
+    isWeb3Enabled,
+    enableWeb3,
+    isAuthenticated,
+    isWeb3EnableLoading,
+    Moralis,
+  } = useMoralis();
+  // eslint-disable-next-line no-unused-vars
+  const [isFantomConnected, setIsFantomConnected] = useState(false);
+
+  const openWalletWarning = () => {
+    const args = {
+      message: "Wallet is not connected",
+      description: "",
+      duration: 10,
+    };
+    notification.open(args);
+  };
+
+  const openWrongNetworkWarning = () => {
+    const args = {
+      message: "Wrong network!",
+      description:
+        "You should change network to Fantom in order to use the app",
+      duration: 10,
+    };
+    notification.open(args);
+  };
+
+  async function isConnectedToFantom() {
+    const connectorId = window.localStorage.getItem("connectorId");
+    if (connectorId) {
+      const chain = await Moralis.getChainId();
+      console.log(chain);
+      if (chain === "0xfa") {
+        console.log("TRUEEEEEEEE");
+        setIsFantomConnected(true);
+      } else {
+        openWrongNetworkWarning();
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (account) {
+      isConnectedToFantom();
+    }
+  }, [account]);
 
   useEffect(() => {
     const connectorId = window.localStorage.getItem("connectorId");
@@ -53,6 +100,34 @@ const App = () => {
       enableWeb3({ provider: connectorId });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, isWeb3Enabled]);
+
+  useEffect(() => {
+    const connectorId = window.localStorage.getItem("connectorId");
+    setTimeout(() => {
+      if (!connectorId) {
+        openWalletWarning();
+      }
+    }, 2000);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [!isAuthenticated, !isWeb3Enabled]);
+
+  // useEffect(() => {
+  //   isConnectedToFantom();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     const connectorId = window.localStorage.getItem("connectorId");
+  //     if (!isFantomConnected && connectorId) {
+  //       console.log(isFantomConnected);
+  //       openWrongNetworkWarning();
+  //     }
+  //   }, 3000);
+
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   return (
     <Layout style={{ overflow: "auto" }}>
@@ -65,8 +140,17 @@ const App = () => {
           </div>
         </Header>
 
-        <div style={styles.content}>
+        <div className="main" style={styles.content}>
           <div className="staking">
+            <div className="heading-wrapper">
+              <h1 className="title">
+                Stánbryg PVP. Stage 0 PVP on the way to Rarity Metaworld
+              </h1>
+              <h2 className="subtitle">
+                Stake wRAR, wRAR/FTM LP, or RBE/FTM LP to earn as much RBE as
+                possible
+              </h2>
+            </div>
             <div style={{ paddingBottom: "30px" }}>
               <Text style={{ display: "block" }}>
                 💰 Buy wRAR{" "}

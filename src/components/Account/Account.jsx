@@ -52,8 +52,15 @@ function Account() {
   if (!isAuthenticated || !account) {
     return (
       <>
-        <div className="auth-btn" onClick={() => setIsAuthModalVisible(true)}>
-          <p style={styles.text}>Authenticate</p>
+        <div className="auth-btn">
+          <Button
+            type="primary"
+            size="large"
+            style={{}}
+            onClick={() => setIsAuthModalVisible(true)}
+          >
+            Connect Wallet
+          </Button>
         </div>
         <Modal
           visible={isAuthModalVisible}
