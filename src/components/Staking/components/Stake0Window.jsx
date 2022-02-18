@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useWeb3Contract, useMoralis } from "react-moralis";
 import BigNumber from "bignumber.js";
 import Web3 from "web3";
+import wrarLogo from "../../../assets/logo.png";
 
 const wRarAbi = [
   { inputs: [], stateMutability: "nonpayable", type: "constructor" },
@@ -650,6 +651,9 @@ export default function Stake0Window() {
       style={styles.card}
       title={
         <div style={styles.header}>
+          <div clasName="sc-logo-wrapper">
+            <img src={wrarLogo} alt="wRar Logo" width="50" height="50" />
+          </div>
           <div className="title-wrapper">
             <span className="title">Stake wRAR</span>
             <span className="multiplier">x1</span>

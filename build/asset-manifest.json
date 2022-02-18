@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/static/css/main.459465bb.chunk.css",
+    "main.css": "/static/css/main.9fd1382c.chunk.css",
     "main.js": "/static/js/main.9bb56d80.chunk.js",
     "main.js.map": "/static/js/main.9bb56d80.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.206ceba0.js",
@@ -12,7 +12,7 @@
     "service-worker.js": "/service-worker.js",
     "service-worker.js.map": "/service-worker.js.map",
     "static/css/2.7393f959.chunk.css.map": "/static/css/2.7393f959.chunk.css.map",
-    "static/css/main.459465bb.chunk.css.map": "/static/css/main.459465bb.chunk.css.map",
+    "static/css/main.9fd1382c.chunk.css.map": "/static/css/main.9fd1382c.chunk.css.map",
     "static/js/2.6781c53e.chunk.js.LICENSE.txt": "/static/js/2.6781c53e.chunk.js.LICENSE.txt",
     "static/media/Coin98.1e4e4073.png": "/static/media/Coin98.1e4e4073.png",
     "static/media/MathWallet.19212234.svg": "/static/media/MathWallet.19212234.svg",
@@ -24,7 +24,7 @@
     "static/js/runtime-main.206ceba0.js",
     "static/css/2.7393f959.chunk.css",
     "static/js/2.6781c53e.chunk.js",
-    "static/css/main.459465bb.chunk.css",
+    "static/css/main.9fd1382c.chunk.css",
     "static/js/main.9bb56d80.chunk.js"
   ]
 }
