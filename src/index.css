@@ -205,6 +205,7 @@ span.multiplier {
   image-rendering: -webkit-optimize-contrast;
   height: 100%;
   max-height: 50px;
+  width: auto;
 }
 
 .ant-notification {
