@@ -92,6 +92,7 @@ const App = () => {
     if (account) {
       isConnectedToFantom();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account]);
 
   useEffect(() => {
