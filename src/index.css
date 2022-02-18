@@ -184,6 +184,11 @@ span.multiplier {
   color: #e68626;
 }
 
+.staking .ant-card-head-title .ant-typography {
+  font-size: 13px;
+  white-space: normal;
+}
+
 @media (max-width: 767px) {
   .staking {
     padding: 20px;
