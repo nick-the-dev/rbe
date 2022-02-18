@@ -651,7 +651,7 @@ export default function Stake0Window() {
       style={styles.card}
       title={
         <div style={styles.header}>
-          <div clasName="sc-logo-wrapper">
+          <div className="sc-logo-wrapper">
             <img src={wrarLogo} alt="wRar Logo" width="50" height="50" />
           </div>
           <div className="title-wrapper">
