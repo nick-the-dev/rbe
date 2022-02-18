@@ -84,8 +84,16 @@ const App = () => {
         setIsFantomConnected(true);
       } else {
         openWrongNetworkWarning();
+        switchNetworkToFantom();
       }
     }
+  }
+
+  async function switchNetworkToFantom() {
+    await window.ethereum.request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chainId: "0xfa" }],
+    });
   }
 
   useEffect(() => {
