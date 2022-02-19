@@ -281,6 +281,7 @@ span.multiplier {
   .main {
     margin-top: 64px !important;
     padding-top: 0px;
+    padding-bottom: 70px;
   }
 
   .staking .heading-wrapper .title {
